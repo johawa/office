@@ -5,7 +5,7 @@ import { Select } from "@react-three/postprocessing";
 export default function Chair(props) {
   const ref = useRef();
   const group = useRef();
-  const { nodes, materials, ...rest } = useGLTF("/chairGLTF.gltf");
+  const { nodes, materials } = useGLTF("/chairGLTF.gltf");
   const [hovered, hover] = useState(null);
 
   return (

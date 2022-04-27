@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { Physics } from "@react-three/cannon";
 import reportWebVitals from "./reportWebVitals";
 import { createRoot } from "react-dom/client";
-import { Canvas, extend, useThree, useFrame } from "@react-three/fiber";
+import { Canvas, extend, useThree } from "@react-three/fiber";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Selection, EffectComposer, Outline } from "@react-three/postprocessing";
 import CameraControls from "camera-controls";
@@ -14,16 +14,16 @@ import Floor from "./components/Floor";
 CameraControls.install({ THREE });
 extend({ CameraControls });
 
-function Controls(clickPosition) {
-  const ref = useRef();
-  const camera = useThree((state) => state.camera);
-  const gl = useThree((state) => state.gl);
-  useFrame((state, delta) => {
-    ref.current.moveTo(20, 7, 7);
-    ref.current.update(delta);
-  });
-  return <cameraControls ref={ref} args={[camera, gl.domElement]} />;
-}
+// function Controls(clickPosition) {
+//   const ref = useRef();
+//   const camera = useThree((state) => state.camera);
+//   const gl = useThree((state) => state.gl);
+//   useFrame((state, delta) => {
+//     ref.current.moveTo(20, 7, 7);
+//     ref.current.update(delta);
+//   });
+//   return <cameraControls ref={ref} args={[camera, gl.domElement]} />;
+// }
 
 extend({ OrbitControls });
 
