@@ -1,26 +1,39 @@
 import { useFrame } from "@react-three/fiber";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useSpring } from "@react-spring/three";
+import CameraControls from "camera-controls";
+import { Canvas, extend, useThree } from "@react-three/fiber";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import * as THREE from "three";
+CameraControls.install({ THREE });
+extend({ CameraControls });
+
+function Controls({ clickPosition, moveCamera }) {
+  const ref = useRef();
+  const camera = useThree((state) => state.camera);
+  const gl = useThree((state) => state.gl);
+
+  useFrame((state, delta) => {
+    // console.log("click", clickPosition, moveCamera);
+    if (moveCamera === true) {
+    
+      ref.current.moveTo(clickPosition.x, 0, clickPosition.z, true);
+      ref.current.update(delta);
+      return;
+    }
+  });
+  return <cameraControls ref={ref} args={[camera, gl.domElement]} />;
+}
 
 export default function Floor() {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, z: 0 });
   const [clickPosition, setClickPosition] = useState({ x: 0, z: 0 });
-  const [zoom, set] = useState(false);
+  const [moveCamera, setMoveCamera] = useState(false);
 
-  const { z } = useSpring({
-    from: { z: 7 },
-    to: { z: 8 },
-    config: { mass: 5, tension: 400, friction: 50, precision: 0.0001 },
-  });
-
-  useFrame((state) => {
-    console.log("state", z.get());
-    // z.to(20).start().then((v) => console.log(v.value));
-    state.camera.position.z = z.get();
-  });
-
+  console.log(clickPosition);
   return (
     <group>
+      <Controls clickPosition={clickPosition} moveCamera={moveCamera} />
       <mesh
         receiveShadow
         position={[0, -0.5, 0]}
@@ -29,7 +42,7 @@ export default function Floor() {
         }}
         onClick={(e) => {
           setClickPosition({ x: e.point.x, z: e.point.z });
-          set(!zoom);
+          setMoveCamera(true);
           console.log("click", e);
         }}
       >
