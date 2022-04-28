@@ -3,19 +3,18 @@ import * as THREE from "three";
 import { Physics } from "@react-three/cannon";
 import reportWebVitals from "./reportWebVitals";
 import { createRoot } from "react-dom/client";
-import { Canvas, extend, useThree } from "@react-three/fiber";
+import { Canvas, extend, useThree, useFrame } from "@react-three/fiber";
 import { Selection, EffectComposer, Outline } from "@react-three/postprocessing";
-import { useFrame } from "@react-three/fiber";
+import { PerspectiveCamera, Stage } from "@react-three/drei";
+import { Loader } from "@react-three/drei";
+import CameraControls from "camera-controls";
+
 import Chair from "./components/Chair";
 import Floor from "./components/Floor";
-import {
-  PointerLockControls,
-  OrbitControls,
-  useAspect,
-  PerspectiveCamera,
-  FirstPersonControls,
-} from "@react-three/drei";
-import CameraControls from "camera-controls";
+import Scene from "./components/Scene";
+import Walls from "./components/Walls";
+
+import "./index.css";
 
 CameraControls.install({ THREE });
 extend({ CameraControls });
@@ -39,55 +38,43 @@ function Controls() {
       ref.current.azimuthRotateSpeed = -0.3;
       ref.current.polarRotateSpeed = -0.3;
       ref.current.truckSpeed = 10;
+      ref.current.mouseButtons.wheel = null;
+
       ref.current.moveTo(0, 2, EPS);
     }
   }, [ref.current, camera]);
 
   return <cameraControls args={[camera, gl.domElement]} ref={ref} />;
 }
-const Camera = () => {
-  const { width, height } = useAspect();
-  const EPS = 1e-5;
-  return (
-    <perspectiveCamera
-      makeDefault
-      position={[0, 0, EPS]}
-      fov={60}
-      aspect={width / height}
-      near={0.1}
-      far={100}
-      target={null}
-    ></perspectiveCamera>
-  );
-};
 
 const App = () => {
   const EPS = 1e-5;
   return (
     <div style={{ height: "100vh", width: "100vw" }}>
-      <Canvas style={{ background: "black" }}>
-        <Suspense fallback={null}>
+      <Suspense fallback={null}>
+        <Canvas style={{ background: "grey" }}>
           <ambientLight intensity={0.2} />
 
           <PerspectiveCamera makeDefault position={[0, 0, EPS]} fov={60} near={0.1} far={100} />
           <directionalLight intensity={0.5} position={[6, 3, 0]} />
-
           <axesHelper />
-
+          {/* 
           <Selection>
             <EffectComposer multisampling={8} autoClear={false}>
               <Outline blur visibleEdgeColor="white" edgeStrength={100} width={3000} />
             </EffectComposer>
-
             <Chair />
-          </Selection>
+          </Selection> */}
 
           <Physics>
             <Floor></Floor>
+            <Scene></Scene>
+            <Walls></Walls>
           </Physics>
           <Controls />
-        </Suspense>
-      </Canvas>
+        </Canvas>
+      </Suspense>
+      <Loader />
     </div>
   );
 };

@@ -1,14 +1,6 @@
+import React, { useState } from "react";
 import { useFrame } from "@react-three/fiber";
-import React, { useState, useRef } from "react";
-import { useSpring } from "@react-spring/three";
-import CameraControls from "camera-controls";
-import { Canvas, extend, useThree } from "@react-three/fiber";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
-
-CameraControls.install({ THREE });
-extend({ CameraControls });
 
 function Controls({ clickPosition, moveCamera }) {
   useFrame((state, delta) => {
@@ -52,7 +44,7 @@ export default function Floor() {
           }}
           onPointerUp={(e) => handlePointerUp(e)}
         ></mesh>
-        <mesh visible position={[cursorPosition.x, 0, cursorPosition.z]} rotation={[-Math.PI * 0.5, 0, 0]}>
+        <mesh visible position={[cursorPosition.x, 0.05, cursorPosition.z]} rotation={[-Math.PI * 0.5, 0, 0]}>
           <circleGeometry args={[0.5, 32]} />
           <meshStandardMaterial color="white" transparent opacity={0.5} />
         </mesh>
