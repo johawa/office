@@ -21,22 +21,25 @@ CameraControls.install({ THREE });
 extend({ CameraControls });
 
 function Controls() {
+  const EPS = 1e-5;
   const ref = useRef();
   const camera = useThree((state) => state.camera);
   const gl = useThree((state) => state.gl);
+  const state = useThree();
 
-  console.log("ref", camera);
   useFrame((state, delta) => {
     ref.current.update(delta);
   });
 
   useEffect(() => {
     if (!!ref.current) {
+      state.controls = ref.current;
       ref.current.minDistance = 1;
       ref.current.maxDistance = 1;
       ref.current.azimuthRotateSpeed = -0.3;
       ref.current.polarRotateSpeed = -0.3;
       ref.current.truckSpeed = 10;
+      ref.current.moveTo(0, 2, EPS);
     }
   }, [ref.current, camera]);
 
@@ -65,8 +68,8 @@ const App = () => {
       <Canvas style={{ background: "black" }}>
         <Suspense fallback={null}>
           <ambientLight intensity={0.2} />
-          <Camera />
-          <PerspectiveCamera makeDefault position={[0, 0, EPS]} fov={60} near={0.1} far={100} /> 
+
+          <PerspectiveCamera makeDefault position={[0, 0, EPS]} fov={60} near={0.1} far={100} />
           <directionalLight intensity={0.5} position={[6, 3, 0]} />
 
           <axesHelper />
@@ -78,10 +81,10 @@ const App = () => {
 
             <Chair />
           </Selection>
-          <Floor></Floor>
-          {/* <Physics>
-          
-          </Physics> */}
+
+          <Physics>
+            <Floor></Floor>
+          </Physics>
           <Controls />
         </Suspense>
       </Canvas>
